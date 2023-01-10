@@ -21,24 +21,43 @@ export class ProviderLedgerReactNative extends Provider<ProviderLedgerReactNativ
   private _transport: TransportBLE | null = null
   private _bleManager: BleManager | null = null
 
+  async getPublicKeyAndAddressForHDPath(hdPath: string) {
+    let resp = {publicKey: '', address: ''}
+    try {
+      this.stop = false;
+
+      const transport = await this.awaitForTransport(this._options.deviceId);
+      if (!transport) {
+        throw new Error('can_not_connected');
+      }
+      const eth = new AppEth(transport);
+
+      const response = await eth.getAddress(hdPath);
+
+      resp = {
+        publicKey: compressPublicKey(response.publicKey),
+        address: response.address
+      }
+      this.emit('getPublicKeyForHDPath', true);
+    } catch (e) {
+      if (e instanceof Error) {
+        this.emit('getPublicKeyForHDPath', false, e.message);
+        throw new Error(e.message);
+      }
+    }
+    return resp
+  }
+
   async getBase64PublicKey() {
     let resp = ''
     try {
       if (!this._wallet.publicKey) {
-        this.stop = false;
-
-        const transport = await this.awaitForTransport(this._options.deviceId);
-        if (!transport) {
-          throw new Error('can_not_connected');
-        }
-        const eth = new AppEth(transport);
-
-        const response = await eth.getAddress(this._options.hdPath);
-
-        this._wallet.publicKey = compressPublicKey(response.publicKey);
+        const {publicKey} = await this.getPublicKeyAndAddressForHDPath(this._options.hdPath)
+        this._wallet.publicKey = publicKey;
       }
 
       resp = Buffer.from(this._wallet.publicKey, 'hex').toString('base64');
+      this.emit('getBase64PublicKey', true);
     } catch (e) {
       if (e instanceof Error) {
         this.emit('getBase64PublicKey', false, e.message);
