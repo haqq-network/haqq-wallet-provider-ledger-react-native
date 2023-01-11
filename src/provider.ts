@@ -205,7 +205,8 @@ export class ProviderLedgerReactNative extends Provider<ProviderLedgerReactNativ
 
   onDisconnectTransport = () => {
     if (this._transport) {
-      this._transport.off('disconnect', this.onDisconnectTransport)
+      this._transport.off('disconnect', this.onDisconnectTransport);
+      this._transport = null;
     }
   }
 }
