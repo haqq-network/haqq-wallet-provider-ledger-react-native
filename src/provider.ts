@@ -8,8 +8,10 @@ import {TransactionRequest} from '@ethersproject/abstract-provider';
 import {UnsignedTransaction, utils} from 'ethers';
 import AppEth, {ledgerService} from '@ledgerhq/hw-app-eth';
 import TransportBLE from '@ledgerhq/react-native-hw-transport-ble';
-import {BleManager, State} from 'react-native-ble-plx';
+import {BleManager} from 'react-native-ble-plx';
 import {sleep} from './sleep';
+import {getBleManager} from './get-ble-manager';
+import {getDeviceConnection} from './get-device-connection';
 
 const connectOptions = {
   requestMTU: 156,
@@ -168,27 +170,9 @@ export class ProviderLedgerReactNative extends Provider<ProviderLedgerReactNativ
   }
 
   async awaitForTransport(deviceId: string) {
-    if (!this._bleManager) {
-      this._bleManager = new BleManager();
-    }
     while (!this._transport && !this.stop) {
       try {
-        const state = await this._bleManager.state();
-
-        if (state !== State.PoweredOn) {
-          throw new Error(`not_connected ${state}`);
-        }
-
-        const device = await this._bleManager.connectToDevice(
-          deviceId,
-          connectOptions,
-        );
-
-        const isConnected = await device.isConnected();
-
-        if (!isConnected) {
-          await device.connect();
-        }
+        const device = await getDeviceConnection(deviceId);
 
         this._transport = await TransportBLE.open(device);
         if (this._transport) {

@@ -1,6 +1,7 @@
 import {BleManager, State, Subscription as BleSub} from 'react-native-ble-plx';
 import {PermissionsAndroid, Platform} from 'react-native';
 import {Observable} from 'rxjs';
+import {getBleManager} from './get-ble-manager';
 
 export async function tryToInitBt(): Promise<Observable<State>> {
   if (Platform.OS === 'android') {
@@ -11,7 +12,7 @@ export async function tryToInitBt(): Promise<Observable<State>> {
       PermissionsAndroid.PERMISSIONS.BLUETOOTH_ADVERTISE,
     ]);
   }
-  const manager = new BleManager();
+  const manager = getBleManager();
   let sub: BleSub;
   let previousState = State.Unknown;
   return new Observable(observer => {
