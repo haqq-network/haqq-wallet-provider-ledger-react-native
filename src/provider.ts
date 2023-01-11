@@ -143,6 +143,30 @@ export class ProviderLedgerReactNative extends Provider<ProviderLedgerReactNativ
     this.stop = true;
   }
 
+  async confirmAddress(hdPath: string) {
+    let resp = ''
+    try {
+      this.stop = false;
+
+      const transport = await this.awaitForTransport(this._options.deviceId);
+      if (!transport) {
+        throw new Error('can_not_connected');
+      }
+      const eth = new AppEth(transport);
+
+      const response = await eth.getAddress(hdPath, true);
+
+      resp = response.address
+      this.emit('confirmAddress', true);
+    } catch (e) {
+      if (e instanceof Error) {
+        this.emit('confirmAddress', false, e.message);
+        throw new Error(e.message);
+      }
+    }
+    return resp
+  }
+
   async awaitForTransport(deviceId: string) {
     if (!this._bleManager) {
       this._bleManager = new BleManager();
