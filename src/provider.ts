@@ -170,7 +170,8 @@ export class ProviderLedgerReactNative extends Provider<ProviderLedgerReactNativ
   }
 
   async awaitForTransport(deviceId: string) {
-    while (!this._transport && !this.stop) {
+    let attempts = 0;
+    while (!this._transport && !this.stop && attempts < 150) {
       try {
         const device = await getDeviceConnection(deviceId);
 
@@ -181,6 +182,7 @@ export class ProviderLedgerReactNative extends Provider<ProviderLedgerReactNativ
       } catch (e) {
         this.emit('awaitForTransport', new Date(), e)
         await sleep(500);
+        attempts += 1;
       }
     }
 
