@@ -1,27 +1,19 @@
-import {ProviderLedgerReactNativeOptions,} from './types';
+import {TransactionRequest} from '@ethersproject/abstract-provider';
 import {
   compressPublicKey,
   Provider,
   ProviderInterface
 } from '@haqq/provider-base';
-import {TransactionRequest} from '@ethersproject/abstract-provider';
-import {UnsignedTransaction, utils} from 'ethers';
 import AppEth, {ledgerService} from '@ledgerhq/hw-app-eth';
 import TransportBLE from '@ledgerhq/react-native-hw-transport-ble';
-import {BleManager} from 'react-native-ble-plx';
-import {sleep} from './sleep';
-import {getBleManager} from './get-ble-manager';
+import {utils, UnsignedTransaction} from 'ethers';
 import {getDeviceConnection} from './get-device-connection';
-
-const connectOptions = {
-  requestMTU: 156,
-  connectionPriority: 1,
-};
+import {sleep} from './sleep';
+import {ProviderLedgerReactNativeOptions,} from './types';
 
 export class ProviderLedgerReactNative extends Provider<ProviderLedgerReactNativeOptions> implements ProviderInterface {
   public stop: boolean = false;
   private _transport: TransportBLE | null = null
-  private _bleManager: BleManager | null = null
 
   async getPublicKeyAndAddressForHDPath(hdPath: string) {
     let resp = {publicKey: '', address: ''}
@@ -43,8 +35,8 @@ export class ProviderLedgerReactNative extends Provider<ProviderLedgerReactNativ
       this.emit('getPublicKeyForHDPath', true);
     } catch (e) {
       if (e instanceof Error) {
-        this.emit('getPublicKeyForHDPath', false, e.message);
-        throw new Error(e.message);
+        this.catchError(e, 'getPublicKeyForHDPath');
+
       }
     }
     return resp
@@ -62,8 +54,7 @@ export class ProviderLedgerReactNative extends Provider<ProviderLedgerReactNativ
       this.emit('getBase64PublicKey', true);
     } catch (e) {
       if (e instanceof Error) {
-        this.emit('getBase64PublicKey', false, e.message);
-        throw new Error(e.message);
+        this.catchError(e, 'getBase64PublicKey');
       }
     }
     return resp
@@ -102,8 +93,7 @@ export class ProviderLedgerReactNative extends Provider<ProviderLedgerReactNativ
       this.emit('getSignedTx', true);
     } catch (e) {
       if (e instanceof Error) {
-        this.emit('getSignedTx', false, e.message);
-        throw new Error(e.message);
+        this.catchError(e, 'getSignedTx');
       }
     }
 
@@ -131,8 +121,7 @@ export class ProviderLedgerReactNative extends Provider<ProviderLedgerReactNativ
       this.emit('signTypedData', true);
     } catch (e) {
       if (e instanceof Error) {
-        this.emit('signTypedData', false, e.message);
-        throw new Error(e.message);
+        this.catchError(e, 'signTypedData');
       }
       return '';
     }
@@ -180,7 +169,7 @@ export class ProviderLedgerReactNative extends Provider<ProviderLedgerReactNativ
           this._transport.on('disconnect', this.onDisconnectTransport)
         }
       } catch (e) {
-        this.emit('awaitForTransport', new Date(), e)
+        this.emit('awaitForTransport', new Date(), e, attempts)
         await sleep(500);
         attempts += 1;
       }
@@ -193,6 +182,24 @@ export class ProviderLedgerReactNative extends Provider<ProviderLedgerReactNativ
     if (this._transport) {
       this._transport.off('disconnect', this.onDisconnectTransport);
       this._transport = null;
+    }
+  }
+
+  catchError(e: Error, source: string) {
+    switch (e.name) {
+      case 'TransportStatusError':
+        // @ts-ignore
+        switch (String(e.statusCode)) {
+          case '27010':
+            this.emit(source, false, e.message, e.name, '27010');
+            throw new Error('ledger_locked');
+            break;
+        }
+        break;
+      default:
+        this.emit(source, false, e.message, e.name);
+        throw new Error(e.message);
+        break;
     }
   }
 }

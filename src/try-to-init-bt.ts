@@ -1,5 +1,5 @@
-import {BleManager, State, Subscription as BleSub} from 'react-native-ble-plx';
 import {PermissionsAndroid, Platform} from 'react-native';
+import {State, Subscription as BleSub} from 'react-native-ble-plx';
 import {Observable} from 'rxjs';
 import {getBleManager} from './get-ble-manager';
 
