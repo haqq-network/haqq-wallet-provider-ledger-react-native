@@ -7,6 +7,7 @@ import {
 import AppEth, {ledgerService} from '@ledgerhq/hw-app-eth';
 import TransportBLE from '@ledgerhq/react-native-hw-transport-ble';
 import {utils, UnsignedTransaction} from 'ethers';
+import {suggestApp} from './commands/suggest-app';
 import {getDeviceConnection} from './get-device-connection';
 import {sleep} from './sleep';
 import {ProviderLedgerReactNativeOptions,} from './types';
@@ -24,6 +25,11 @@ export class ProviderLedgerReactNative extends Provider<ProviderLedgerReactNativ
       if (!transport) {
         throw new Error('can_not_connected');
       }
+
+      if (this._options.appName) {
+        await suggestApp(transport, this._options.appName);
+      }
+
       const eth = new AppEth(transport);
 
       const response = await eth.getAddress(hdPath);
@@ -79,6 +85,10 @@ export class ProviderLedgerReactNative extends Provider<ProviderLedgerReactNativ
         throw new Error('can_not_connected');
       }
 
+      if (this._options.appName) {
+        await suggestApp(transport, this._options.appName);
+      }
+
       const eth = new AppEth(transport);
 
       const signature = await eth.signTransaction(this._options.hdPath, unsignedTx, resolution);
@@ -109,6 +119,10 @@ export class ProviderLedgerReactNative extends Provider<ProviderLedgerReactNativ
 
       if (!transport) {
         throw new Error('can_not_connected')
+      }
+
+      if (this._options.appName) {
+        await suggestApp(transport, this._options.appName);
       }
 
       const eth = new AppEth(transport);
@@ -143,6 +157,11 @@ export class ProviderLedgerReactNative extends Provider<ProviderLedgerReactNativ
       if (!transport) {
         throw new Error('can_not_connected');
       }
+
+      if (this._options.appName) {
+        await suggestApp(transport, this._options.appName);
+      }
+
       const eth = new AppEth(transport);
 
       const response = await eth.getAddress(hdPath, true);
