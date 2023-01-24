@@ -213,6 +213,9 @@ export class ProviderLedgerReactNative extends Provider<ProviderLedgerReactNativ
             this.emit(source, false, e.message, e.name, '27010');
             throw new Error('ledger_locked');
             break;
+          case '27013':
+            this.emit(source, false, e.message, e.name, '27013');
+            throw new Error('ledger_rejected');
         }
         break;
       default:
