@@ -6,7 +6,7 @@ import {
 } from '@haqq/provider-base';
 import AppEth, {ledgerService} from '@ledgerhq/hw-app-eth';
 import TransportBLE from '@ledgerhq/react-native-hw-transport-ble';
-import {utils, UnsignedTransaction} from 'ethers';
+import {UnsignedTransaction, utils} from 'ethers';
 import {suggestApp} from './commands/suggest-app';
 import {getDeviceConnection} from './get-device-connection';
 import {sleep} from './sleep';
@@ -51,12 +51,8 @@ export class ProviderLedgerReactNative extends Provider<ProviderLedgerReactNativ
   async getBase64PublicKey() {
     let resp = ''
     try {
-      if (!this._wallet.publicKey) {
-        const {publicKey} = await this.getPublicKeyAndAddressForHDPath(this._options.hdPath)
-        this._wallet.publicKey = publicKey;
-      }
-
-      resp = Buffer.from(this._wallet.publicKey, 'hex').toString('base64');
+      const {publicKey} = await this.getPublicKeyAndAddressForHDPath(this._options.hdPath)
+      resp = Buffer.from(publicKey, 'hex').toString('base64');
       this.emit('getBase64PublicKey', true);
     } catch (e) {
       if (e instanceof Error) {
