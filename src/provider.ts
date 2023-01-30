@@ -6,7 +6,7 @@ import {
 } from '@haqq/provider-base';
 import AppEth, {ledgerService} from '@ledgerhq/hw-app-eth';
 import TransportBLE from '@ledgerhq/react-native-hw-transport-ble';
-import {UnsignedTransaction, utils} from 'ethers';
+import {utils, UnsignedTransaction} from 'ethers';
 import {suggestApp} from './commands/suggest-app';
 import {getDeviceConnection} from './get-device-connection';
 import {sleep} from './sleep';
@@ -15,6 +15,11 @@ import {ProviderLedgerReactNativeOptions,} from './types';
 export class ProviderLedgerReactNative extends Provider<ProviderLedgerReactNativeOptions> implements ProviderInterface {
   public stop: boolean = false;
   private _transport: TransportBLE | null = null
+
+  async getEthAddress(hdPath: string): Promise<string> {
+    const {address} = await this.getPublicKeyAndAddressForHDPath(hdPath)
+    return address
+  }
 
   async getPublicKeyAndAddressForHDPath(hdPath: string) {
     let resp = {publicKey: '', address: ''}
@@ -48,21 +53,12 @@ export class ProviderLedgerReactNative extends Provider<ProviderLedgerReactNativ
     return resp
   }
 
-  async getBase64PublicKey() {
-    let resp = ''
-    try {
-      const {publicKey} = await this.getPublicKeyAndAddressForHDPath(this._options.hdPath)
-      resp = Buffer.from(publicKey, 'hex').toString('base64');
-      this.emit('getBase64PublicKey', true);
-    } catch (e) {
-      if (e instanceof Error) {
-        this.catchError(e, 'getBase64PublicKey');
-      }
-    }
-    return resp
+  async getPublicKey(hdPath: string) {
+    const {publicKey} = await this.getPublicKeyAndAddressForHDPath(hdPath)
+    return publicKey
   }
 
-  async getSignedTx(transaction: TransactionRequest) {
+  async getSignedTx(hdPath: string, transaction: TransactionRequest) {
     let resp = ''
     try {
       this.stop = false;
@@ -87,7 +83,7 @@ export class ProviderLedgerReactNative extends Provider<ProviderLedgerReactNativ
 
       const eth = new AppEth(transport);
 
-      const signature = await eth.signTransaction(this._options.hdPath, unsignedTx, resolution);
+      const signature = await eth.signTransaction(hdPath, unsignedTx, resolution);
 
       resp = utils.serializeTransaction(transaction as UnsignedTransaction, {
         ...signature,
@@ -106,7 +102,7 @@ export class ProviderLedgerReactNative extends Provider<ProviderLedgerReactNativ
     return resp
   }
 
-  async signTypedData(domainHash: string, valuesHash: string) {
+  async signTypedData(hdPath: string, domainHash: string, valuesHash: string) {
     let resp = ''
     try {
       this.stop = false;
@@ -123,7 +119,7 @@ export class ProviderLedgerReactNative extends Provider<ProviderLedgerReactNativ
 
       const eth = new AppEth(transport);
 
-      const signature = await eth.signEIP712HashedMessage(this._options.hdPath, domainHash, valuesHash);
+      const signature = await eth.signEIP712HashedMessage(hdPath, domainHash, valuesHash);
 
       const v = (signature.v - 27).toString(16).padStart(2, '0');
       resp = '0x' + signature.r + signature.s + v;
@@ -215,8 +211,7 @@ export class ProviderLedgerReactNative extends Provider<ProviderLedgerReactNativ
         }
         break;
       default:
-        this.emit(source, false, e.message, e.name);
-        throw new Error(e.message);
+        super.catchError(e, source);
         break;
     }
   }

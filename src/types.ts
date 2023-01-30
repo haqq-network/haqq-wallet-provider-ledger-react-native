@@ -36,6 +36,5 @@ export enum State {
 
 export type ProviderLedgerReactNativeOptions = {
   deviceId: string;
-  hdPath: string;
   appName?: string;
 }
