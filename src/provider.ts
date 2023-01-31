@@ -7,7 +7,7 @@ import {
 import AppEth, {ledgerService} from '@ledgerhq/hw-app-eth';
 import TransportBLE from '@ledgerhq/react-native-hw-transport-ble';
 import {utils, UnsignedTransaction} from 'ethers';
-import {suggestApp} from './commands/suggest-app';
+import {suggestApp} from './commands';
 import {getDeviceConnection} from './get-device-connection';
 import {sleep} from './sleep';
 import {ProviderLedgerReactNativeOptions,} from './types';
@@ -16,12 +16,11 @@ export class ProviderLedgerReactNative extends Provider<ProviderLedgerReactNativ
   public stop: boolean = false;
   private _transport: TransportBLE | null = null
 
-  async getEthAddress(hdPath: string): Promise<string> {
-    const {address} = await this.getPublicKeyAndAddressForHDPath(hdPath)
-    return address
+  getIdentifier(): string {
+    return this._options.deviceId
   }
 
-  async getPublicKeyAndAddressForHDPath(hdPath: string) {
+  async getAccountInfo(hdPath: string) {
     let resp = {publicKey: '', address: ''}
     try {
       this.stop = false;
@@ -53,10 +52,6 @@ export class ProviderLedgerReactNative extends Provider<ProviderLedgerReactNativ
     return resp
   }
 
-  async getPublicKey(hdPath: string) {
-    const {publicKey} = await this.getPublicKeyAndAddressForHDPath(hdPath)
-    return publicKey
-  }
 
   async getSignedTx(hdPath: string, transaction: TransactionRequest) {
     let resp = ''

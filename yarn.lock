@@ -1115,10 +1115,10 @@
   dependencies:
     "@hapi/hoek" "^9.0.0"
 
-"@haqq/provider-base@^0.0.11":
-  version "0.0.11"
-  resolved "https://registry.yarnpkg.com/@haqq/provider-base/-/provider-base-0.0.11.tgz#cc5ed8b981c5b2a9e46898fbeb41b725cf25a6d0"
-  integrity sha512-rim+sWDcNIT5eC8Zm4/KpbFIzevzlVLoVWPCZS0JzX5rhRRZXj8SU2u+Fp1MTaJymmxh7vui1tASHWckdOITFg==
+"@haqq/provider-base@^0.0.13":
+  version "0.0.13"
+  resolved "https://registry.yarnpkg.com/@haqq/provider-base/-/provider-base-0.0.13.tgz#c4f1a7c5879f17c629a4bfdc9b20032a20e1b852"
+  integrity sha512-Uyu8/ADS7BxsWzTPIoaiOWlp/Ptpm8Ww0R+L8lV6o3D6jWw+oz/D3oLcQ8igAPKpysm6D+OQwadoczKa4GfIRw==
   dependencies:
     "@ethersproject/abstract-provider" "^5.7.0"
     bech32-converting "^1.0.9"
