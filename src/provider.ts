@@ -53,7 +53,7 @@ export class ProviderLedgerReactNative extends Provider<ProviderLedgerReactNativ
   }
 
 
-  async getSignedTx(hdPath: string, transaction: TransactionRequest) {
+  async signTransaction(hdPath: string, transaction: TransactionRequest) {
     let resp = ''
     try {
       this.stop = false;
@@ -87,10 +87,41 @@ export class ProviderLedgerReactNative extends Provider<ProviderLedgerReactNativ
         v: parseInt(signature.v, 10),
       });
 
-      this.emit('getSignedTx', true);
+      this.emit('signTransaction', true);
     } catch (e) {
       if (e instanceof Error) {
-        this.catchError(e, 'getSignedTx');
+        this.catchError(e, 'signTransaction');
+      }
+    }
+
+    return resp
+  }
+
+  async signPersonalMessage(hdPath: string, message: string) {
+    let resp = ''
+    try {
+      this.stop = false;
+      const transport = await this.awaitForTransport(this._options.deviceId);
+
+      if (!transport) {
+        throw new Error('can_not_connected');
+      }
+
+      if (this._options.appName) {
+        await suggestApp(transport, this._options.appName);
+      }
+
+      const eth = new AppEth(transport);
+
+      const signature = await eth.signPersonalMessage(hdPath, Buffer.from(message).toString("hex"));
+
+      const v = (signature.v - 27).toString(16).padStart(2, '0');
+      resp = '0x' + signature.r + signature.s + v;
+
+      this.emit('signPersonalMessage', true);
+    } catch (e) {
+      if (e instanceof Error) {
+        this.catchError(e, 'signPersonalMessage');
       }
     }
 
