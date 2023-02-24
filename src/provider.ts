@@ -1,6 +1,8 @@
 import {TransactionRequest} from '@ethersproject/abstract-provider';
 import {
   compressPublicKey,
+  stringToUtf8Bytes,
+  BytesLike,
   Provider,
   ProviderInterface
 } from '@haqq/provider-base';
@@ -97,7 +99,7 @@ export class ProviderLedgerReactNative extends Provider<ProviderLedgerReactNativ
     return resp
   }
 
-  async signPersonalMessage(hdPath: string, message: string) {
+  async signPersonalMessage(hdPath: string, message: string | BytesLike): Promise<string> {
     let resp = ''
     try {
       this.stop = false;
@@ -113,7 +115,8 @@ export class ProviderLedgerReactNative extends Provider<ProviderLedgerReactNativ
 
       const eth = new AppEth(transport);
 
-      const signature = await eth.signPersonalMessage(hdPath, Buffer.from(message).toString("hex"));
+      const m = Array.from(typeof message === 'string' ? stringToUtf8Bytes(message) : message);
+      const signature = await eth.signPersonalMessage(hdPath, Buffer.from(m).toString('hex'));
 
       const v = (signature.v - 27).toString(16).padStart(2, '0');
       resp = '0x' + signature.r + signature.s + v;
