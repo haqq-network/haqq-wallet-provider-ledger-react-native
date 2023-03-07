@@ -1,4 +1,4 @@
-[@haqq/provider-ledger-react-native - v0.0.16](../README.md) / [Exports](../modules.md) / State
+[@haqq/provider-ledger-react-native - v0.0.17](../README.md) / [Exports](../modules.md) / State
 
 # Enumeration: State
 
@@ -23,7 +23,7 @@ Bluetooth is currently powered off.
 
 #### Defined in
 
-[src/types.ts:30](https://github.com/haqq-network/haqq-wallet-provider-ledger-react-native/blob/60cc13a/src/types.ts#L30)
+[src/types.ts:30](https://github.com/haqq-network/haqq-wallet-provider-ledger-react-native/blob/e50406c/src/types.ts#L30)
 
 ___
 
@@ -35,7 +35,7 @@ Bluetooth is currently powered on and available to use.
 
 #### Defined in
 
-[src/types.ts:34](https://github.com/haqq-network/haqq-wallet-provider-ledger-react-native/blob/60cc13a/src/types.ts#L34)
+[src/types.ts:34](https://github.com/haqq-network/haqq-wallet-provider-ledger-react-native/blob/e50406c/src/types.ts#L34)
 
 ___
 
@@ -47,7 +47,7 @@ The connection with the system service was momentarily lost; an update is immine
 
 #### Defined in
 
-[src/types.ts:18](https://github.com/haqq-network/haqq-wallet-provider-ledger-react-native/blob/60cc13a/src/types.ts#L18)
+[src/types.ts:18](https://github.com/haqq-network/haqq-wallet-provider-ledger-react-native/blob/e50406c/src/types.ts#L18)
 
 ___
 
@@ -59,7 +59,7 @@ The app is not authorized to use Bluetooth low energy.
 
 #### Defined in
 
-[src/types.ts:26](https://github.com/haqq-network/haqq-wallet-provider-ledger-react-native/blob/60cc13a/src/types.ts#L26)
+[src/types.ts:26](https://github.com/haqq-network/haqq-wallet-provider-ledger-react-native/blob/e50406c/src/types.ts#L26)
 
 ___
 
@@ -71,7 +71,7 @@ The current state of the manager is unknown; an update is imminent.
 
 #### Defined in
 
-[src/types.ts:14](https://github.com/haqq-network/haqq-wallet-provider-ledger-react-native/blob/60cc13a/src/types.ts#L14)
+[src/types.ts:14](https://github.com/haqq-network/haqq-wallet-provider-ledger-react-native/blob/e50406c/src/types.ts#L14)
 
 ___
 
@@ -83,4 +83,4 @@ The platform does not support Bluetooth low energy.
 
 #### Defined in
 
-[src/types.ts:22](https://github.com/haqq-network/haqq-wallet-provider-ledger-react-native/blob/60cc13a/src/types.ts#L22)
+[src/types.ts:22](https://github.com/haqq-network/haqq-wallet-provider-ledger-react-native/blob/e50406c/src/types.ts#L22)

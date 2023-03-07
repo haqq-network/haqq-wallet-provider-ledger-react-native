@@ -1,4 +1,4 @@
-[@haqq/provider-ledger-react-native - v0.0.16](../README.md) / [Exports](../modules.md) / ProviderLedgerReactNative
+[@haqq/provider-ledger-react-native - v0.0.17](../README.md) / [Exports](../modules.md) / ProviderLedgerReactNative
 
 # Class: ProviderLedgerReactNative
 
@@ -106,7 +106,7 @@ ___
 
 #### Defined in
 
-[src/provider.ts:19](https://github.com/haqq-network/haqq-wallet-provider-ledger-react-native/blob/60cc13a/src/provider.ts#L19)
+[src/provider.ts:19](https://github.com/haqq-network/haqq-wallet-provider-ledger-react-native/blob/e50406c/src/provider.ts#L19)
 
 ___
 
@@ -116,7 +116,7 @@ ___
 
 #### Defined in
 
-[src/provider.ts:18](https://github.com/haqq-network/haqq-wallet-provider-ledger-react-native/blob/60cc13a/src/provider.ts#L18)
+[src/provider.ts:18](https://github.com/haqq-network/haqq-wallet-provider-ledger-react-native/blob/e50406c/src/provider.ts#L18)
 
 ___
 
@@ -204,7 +204,7 @@ Provider.abort
 
 #### Defined in
 
-[src/provider.ts:167](https://github.com/haqq-network/haqq-wallet-provider-ledger-react-native/blob/60cc13a/src/provider.ts#L167)
+[src/provider.ts:167](https://github.com/haqq-network/haqq-wallet-provider-ledger-react-native/blob/e50406c/src/provider.ts#L167)
 
 ___
 
@@ -259,7 +259,7 @@ ___
 
 #### Defined in
 
-[src/provider.ts:201](https://github.com/haqq-network/haqq-wallet-provider-ledger-react-native/blob/60cc13a/src/provider.ts#L201)
+[src/provider.ts:201](https://github.com/haqq-network/haqq-wallet-provider-ledger-react-native/blob/e50406c/src/provider.ts#L201)
 
 ___
 
@@ -284,7 +284,7 @@ Provider.catchError
 
 #### Defined in
 
-[src/provider.ts:228](https://github.com/haqq-network/haqq-wallet-provider-ledger-react-native/blob/60cc13a/src/provider.ts#L228)
+[src/provider.ts:228](https://github.com/haqq-network/haqq-wallet-provider-ledger-react-native/blob/e50406c/src/provider.ts#L228)
 
 ___
 
@@ -326,7 +326,7 @@ ___
 
 #### Defined in
 
-[src/provider.ts:172](https://github.com/haqq-network/haqq-wallet-provider-ledger-react-native/blob/60cc13a/src/provider.ts#L172)
+[src/provider.ts:172](https://github.com/haqq-network/haqq-wallet-provider-ledger-react-native/blob/e50406c/src/provider.ts#L172)
 
 ___
 
@@ -467,7 +467,7 @@ Provider.getAccountInfo
 
 #### Defined in
 
-[src/provider.ts:25](https://github.com/haqq-network/haqq-wallet-provider-ledger-react-native/blob/60cc13a/src/provider.ts#L25)
+[src/provider.ts:25](https://github.com/haqq-network/haqq-wallet-provider-ledger-react-native/blob/e50406c/src/provider.ts#L25)
 
 ___
 
@@ -489,7 +489,7 @@ Provider.getIdentifier
 
 #### Defined in
 
-[src/provider.ts:21](https://github.com/haqq-network/haqq-wallet-provider-ledger-react-native/blob/60cc13a/src/provider.ts#L21)
+[src/provider.ts:21](https://github.com/haqq-network/haqq-wallet-provider-ledger-react-native/blob/e50406c/src/provider.ts#L21)
 
 ___
 
@@ -730,7 +730,7 @@ ___
 
 #### Defined in
 
-[src/provider.ts:221](https://github.com/haqq-network/haqq-wallet-provider-ledger-react-native/blob/60cc13a/src/provider.ts#L221)
+[src/provider.ts:221](https://github.com/haqq-network/haqq-wallet-provider-ledger-react-native/blob/e50406c/src/provider.ts#L221)
 
 ___
 
@@ -1154,7 +1154,7 @@ Provider.signPersonalMessage
 
 #### Defined in
 
-[src/provider.ts:102](https://github.com/haqq-network/haqq-wallet-provider-ledger-react-native/blob/60cc13a/src/provider.ts#L102)
+[src/provider.ts:102](https://github.com/haqq-network/haqq-wallet-provider-ledger-react-native/blob/e50406c/src/provider.ts#L102)
 
 ___
 
@@ -1183,7 +1183,7 @@ Provider.signTransaction
 
 #### Defined in
 
-[src/provider.ts:58](https://github.com/haqq-network/haqq-wallet-provider-ledger-react-native/blob/60cc13a/src/provider.ts#L58)
+[src/provider.ts:58](https://github.com/haqq-network/haqq-wallet-provider-ledger-react-native/blob/e50406c/src/provider.ts#L58)
 
 ___
 
@@ -1213,7 +1213,7 @@ Provider.signTypedData
 
 #### Defined in
 
-[src/provider.ts:134](https://github.com/haqq-network/haqq-wallet-provider-ledger-react-native/blob/60cc13a/src/provider.ts#L134)
+[src/provider.ts:134](https://github.com/haqq-network/haqq-wallet-provider-ledger-react-native/blob/e50406c/src/provider.ts#L134)
 
 ___
 

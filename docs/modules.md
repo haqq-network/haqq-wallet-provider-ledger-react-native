@@ -1,6 +1,6 @@
-[@haqq/provider-ledger-react-native - v0.0.16](README.md) / Exports
+[@haqq/provider-ledger-react-native - v0.0.17](README.md) / Exports
 
-# @haqq/provider-ledger-react-native - v0.0.16
+# @haqq/provider-ledger-react-native - v0.0.17
 
 ## Table of contents
 
@@ -46,7 +46,7 @@
 
 #### Defined in
 
-[src/commands/list-apps.ts:3](https://github.com/haqq-network/haqq-wallet-provider-ledger-react-native/blob/60cc13a/src/commands/list-apps.ts#L3)
+[src/commands/list-apps.ts:3](https://github.com/haqq-network/haqq-wallet-provider-ledger-react-native/blob/e50406c/src/commands/list-apps.ts#L3)
 
 ___
 
@@ -63,7 +63,7 @@ ___
 
 #### Defined in
 
-[src/types.ts:1](https://github.com/haqq-network/haqq-wallet-provider-ledger-react-native/blob/60cc13a/src/types.ts#L1)
+[src/types.ts:1](https://github.com/haqq-network/haqq-wallet-provider-ledger-react-native/blob/e50406c/src/types.ts#L1)
 
 ___
 
@@ -80,7 +80,7 @@ ___
 
 #### Defined in
 
-[src/types.ts:37](https://github.com/haqq-network/haqq-wallet-provider-ledger-react-native/blob/60cc13a/src/types.ts#L37)
+[src/types.ts:37](https://github.com/haqq-network/haqq-wallet-provider-ledger-react-native/blob/e50406c/src/types.ts#L37)
 
 ## Functions
 
@@ -94,7 +94,7 @@ ___
 
 #### Defined in
 
-[src/get-ble-manager.ts:5](https://github.com/haqq-network/haqq-wallet-provider-ledger-react-native/blob/60cc13a/src/get-ble-manager.ts#L5)
+[src/get-ble-manager.ts:5](https://github.com/haqq-network/haqq-wallet-provider-ledger-react-native/blob/e50406c/src/get-ble-manager.ts#L5)
 
 ___
 
@@ -114,7 +114,7 @@ ___
 
 #### Defined in
 
-[src/commands/get-version.ts:3](https://github.com/haqq-network/haqq-wallet-provider-ledger-react-native/blob/60cc13a/src/commands/get-version.ts#L3)
+[src/commands/get-version.ts:3](https://github.com/haqq-network/haqq-wallet-provider-ledger-react-native/blob/e50406c/src/commands/get-version.ts#L3)
 
 ___
 
@@ -134,7 +134,7 @@ ___
 
 #### Defined in
 
-[src/commands/suggest-app.ts:7](https://github.com/haqq-network/haqq-wallet-provider-ledger-react-native/blob/60cc13a/src/commands/suggest-app.ts#L7)
+[src/commands/suggest-app.ts:7](https://github.com/haqq-network/haqq-wallet-provider-ledger-react-native/blob/e50406c/src/commands/suggest-app.ts#L7)
 
 ___
 
@@ -154,7 +154,7 @@ ___
 
 #### Defined in
 
-[src/commands/list-apps.ts:11](https://github.com/haqq-network/haqq-wallet-provider-ledger-react-native/blob/60cc13a/src/commands/list-apps.ts#L11)
+[src/commands/list-apps.ts:11](https://github.com/haqq-network/haqq-wallet-provider-ledger-react-native/blob/e50406c/src/commands/list-apps.ts#L11)
 
 ___
 
@@ -175,7 +175,7 @@ ___
 
 #### Defined in
 
-[src/scan-devices.ts:5](https://github.com/haqq-network/haqq-wallet-provider-ledger-react-native/blob/60cc13a/src/scan-devices.ts#L5)
+[src/scan-devices.ts:5](https://github.com/haqq-network/haqq-wallet-provider-ledger-react-native/blob/e50406c/src/scan-devices.ts#L5)
 
 ___
 
@@ -196,7 +196,7 @@ ___
 
 #### Defined in
 
-[src/commands/suggest-app.ts:9](https://github.com/haqq-network/haqq-wallet-provider-ledger-react-native/blob/60cc13a/src/commands/suggest-app.ts#L9)
+[src/commands/suggest-app.ts:9](https://github.com/haqq-network/haqq-wallet-provider-ledger-react-native/blob/e50406c/src/commands/suggest-app.ts#L9)
 
 ___
 
@@ -210,4 +210,4 @@ ___
 
 #### Defined in
 
-[src/try-to-init-bt.ts:6](https://github.com/haqq-network/haqq-wallet-provider-ledger-react-native/blob/60cc13a/src/try-to-init-bt.ts#L6)
+[src/try-to-init-bt.ts:6](https://github.com/haqq-network/haqq-wallet-provider-ledger-react-native/blob/e50406c/src/try-to-init-bt.ts#L6)
