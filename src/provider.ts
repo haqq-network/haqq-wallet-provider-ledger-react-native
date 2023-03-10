@@ -198,9 +198,24 @@ export class ProviderLedgerReactNative extends Provider<ProviderLedgerReactNativ
     return resp
   }
 
-  async awaitForTransport(deviceId: string) {
+  async awaitForTransport(deviceId: string, taskId?: string) {
     let attempts = 0;
+    let canceled = false;
+    const _taskId = taskId?.trim?.()?.toLowerCase()
+    const stopTaskEventName = `stop-task-${_taskId}`;
+    const handleStopTask = () => {
+      canceled = true;
+    }
+    
+    if(_taskId){
+      this.once(stopTaskEventName, handleStopTask)
+    }
+
     while (!this._transport && !this.stop && attempts < 150) {
+      if(canceled){
+        throw new Error('canceled')
+      }
+
       try {
         const device = await getDeviceConnection(deviceId);
 
@@ -215,6 +230,9 @@ export class ProviderLedgerReactNative extends Provider<ProviderLedgerReactNativ
       }
     }
 
+    if(_taskId){
+      this.off(stopTaskEventName, handleStopTask)
+    }
     return this._transport
   }
 
