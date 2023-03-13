@@ -1,4 +1,4 @@
-@haqq/provider-ledger-react-native - v0.0.17 / [Exports](modules.md)
+@haqq/provider-ledger-react-native - v0.0.18 / [Exports](modules.md)
 
 # Provider for ledger react-native
 
