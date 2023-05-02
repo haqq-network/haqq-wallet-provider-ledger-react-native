@@ -21,9 +21,7 @@ export const suggestApp = async (
       await openApp(transport, name);
     }
   } catch (err) {
-    console.error('suggestApp', err);
-
-    //@ts-ignore
+    // @ts-ignore
     if (err instanceof Error && !!err.statusCode) {
       throw err;
     }
