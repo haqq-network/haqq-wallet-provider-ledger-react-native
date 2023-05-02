@@ -3,8 +3,8 @@ import EventEmitter from 'events';
 import {Observable, Subscription} from 'rxjs';
 
 export function scanDevices() {
-  let sub: null | Subscription = null
-  let transport: null | Subscription = null
+  let sub: null | Subscription = null;
+  let transport: null | Subscription = null;
 
   const emitter = new EventEmitter();
 
@@ -20,7 +20,7 @@ export function scanDevices() {
         },
         next: e => {
           if (e.type === 'add') {
-            emitter.emit('device', e.descriptor)
+            emitter.emit('device', e.descriptor);
           }
         },
         error: e => {
@@ -31,7 +31,7 @@ export function scanDevices() {
     } catch (e) {
       emitter.emit('error', e);
     }
-  }
+  };
 
   return {
     start() {
@@ -50,7 +50,7 @@ export function scanDevices() {
       listen();
     },
     stop() {
-      if(sub) {
+      if (sub) {
         sub.unsubscribe();
       }
       if (transport) {
@@ -58,6 +58,6 @@ export function scanDevices() {
       }
     },
     on: emitter.on.bind(emitter),
-    off: emitter.off.bind(emitter)
-  }
+    off: emitter.off.bind(emitter),
+  };
 }

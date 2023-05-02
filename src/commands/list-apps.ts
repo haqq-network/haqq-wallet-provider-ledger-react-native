@@ -6,7 +6,7 @@ export type App = {
   hashCodeData: string;
   blocks: number;
   flags: number;
-}
+};
 
 export const listApps = async (transport: TransportBLE) => {
   const payload = await transport.send(0xe0, 0xde, 0, 0);
@@ -16,7 +16,7 @@ export const listApps = async (transport: TransportBLE) => {
   // more than the status bytes
   while (data.length > 2) {
     if (payload[0] !== 0x01) {
-      throw new Error("unknown listApps format");
+      throw new Error('unknown listApps format');
     }
 
     let i = 1;
@@ -28,18 +28,18 @@ export const listApps = async (transport: TransportBLE) => {
       i += 2;
       const flags = data.readUInt16BE(i);
       i += 2;
-      const hashCodeData = data.slice(i, i + 32).toString("hex");
+      const hashCodeData = data.slice(i, i + 32).toString('hex');
       i += 32;
-      const hash = data.slice(i, i + 32).toString("hex");
+      const hash = data.slice(i, i + 32).toString('hex');
       i += 32;
       const nameLength = data[i];
       i++;
 
       if (length !== nameLength + 70) {
-        throw new Error("invalid listApps length data");
+        throw new Error('invalid listApps length data');
       }
 
-      const name = data.slice(i, i + nameLength).toString("ascii");
+      const name = data.slice(i, i + nameLength).toString('ascii');
       i += nameLength;
       apps.push({
         name,

@@ -22,10 +22,10 @@ export const suggestApp = async (
     }
   } catch (err) {
     console.error('suggestApp', err);
-    
+
     //@ts-ignore
-    if(err instanceof Error && !!err.statusCode){
-      throw err
+    if (err instanceof Error && !!err.statusCode) {
+      throw err;
     }
   }
 };

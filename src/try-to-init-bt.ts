@@ -21,9 +21,9 @@ export async function tryToInitBt(): Promise<Observable<State>> {
         previousState = state;
         observer.next(state);
       }
-    }
+    };
 
     manager.state().then(subs);
     sub = manager.onStateChange(subs, true);
-  })
+  });
 }
