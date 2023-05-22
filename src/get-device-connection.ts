@@ -1,7 +1,7 @@
 import {State} from 'react-native-ble-plx';
 import {getBleManager} from './get-ble-manager';
 
-const cache = new Map()
+const cache = new Map();
 
 const connectOptions = {
   requestMTU: 156,
@@ -16,12 +16,9 @@ export async function getDeviceConnection(deviceId: string) {
     throw new Error(`not_connected ${state}`);
   }
   if (!cache.has(deviceId)) {
-    const result = await bleManager.connectToDevice(
-      deviceId,
-      connectOptions,
-    );
+    const result = await bleManager.connectToDevice(deviceId, connectOptions);
 
-    if(result) {
+    if (result) {
       cache.set(deviceId, result);
     }
   }
@@ -38,5 +35,5 @@ export async function getDeviceConnection(deviceId: string) {
     await device.connect();
   }
 
-  return device
+  return device;
 }

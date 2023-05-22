@@ -1,11 +1,11 @@
 export type Device = {
-  id: string
+  id: string;
 
   /**
    * Device name if present
    */
-  name: string | null
-}
+  name: string | null;
+};
 
 export enum State {
   /**
@@ -31,10 +31,10 @@ export enum State {
   /**
    * Bluetooth is currently powered on and available to use.
    */
-  PoweredOn = 'PoweredOn'
+  PoweredOn = 'PoweredOn',
 }
 
 export type ProviderLedgerReactNativeOptions = {
   deviceId: string;
   appName?: string;
-}
+};
