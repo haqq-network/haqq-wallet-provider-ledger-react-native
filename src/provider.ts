@@ -228,7 +228,7 @@ export class ProviderLedgerReactNative
       this.once(stopTaskEventName, handleStopTask);
     }
 
-    while (!this._transport && !this.stop && attempts < 150) {
+    while (!this._transport && !this.stop && attempts < 115) {
       if (canceled) {
         throw new Error('canceled');
       }
@@ -242,7 +242,7 @@ export class ProviderLedgerReactNative
         }
       } catch (e) {
         this.emit('awaitForTransport', new Date(), e, attempts);
-        await sleep(500);
+        await sleep(1000);
         attempts += 1;
       }
     }
