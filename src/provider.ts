@@ -30,16 +30,18 @@ export class ProviderLedgerReactNative
     try {
       this.stop = false;
 
-      const transport = await this.awaitForTransport(this._options.deviceId);
+      let transport = await this.awaitForTransport(this._options.deviceId);
       if (!transport) {
         throw new Error('can_not_connected');
       }
 
       if (this._options.appName) {
         await suggestApp(transport, this._options.appName);
+        this.onDisconnectTransport();
+        transport = await this.awaitForTransport(this._options.deviceId);
       }
 
-      const eth = new AppEth(transport);
+      const eth = new AppEth(transport!);
 
       const response = await eth.getAddress(hdPath);
 
@@ -69,7 +71,7 @@ export class ProviderLedgerReactNative
         {},
       );
 
-      const transport = await this.awaitForTransport(this._options.deviceId);
+      let transport = await this.awaitForTransport(this._options.deviceId);
 
       if (!transport) {
         throw new Error('can_not_connected');
@@ -77,9 +79,11 @@ export class ProviderLedgerReactNative
 
       if (this._options.appName) {
         await suggestApp(transport, this._options.appName);
+        this.onDisconnectTransport();
+        transport = await this.awaitForTransport(this._options.deviceId);
       }
 
-      const eth = new AppEth(transport);
+      const eth = new AppEth(transport!);
 
       const signature = await eth.signTransaction(
         hdPath,
@@ -242,7 +246,7 @@ export class ProviderLedgerReactNative
         }
       } catch (e) {
         this.emit('awaitForTransport', new Date(), e, attempts);
-        await sleep(1000);
+        await sleep(250);
         attempts += 1;
       }
     }
@@ -268,7 +272,6 @@ export class ProviderLedgerReactNative
           case '27010':
             this.emit(source, false, e.message, e.name, '27010');
             throw new Error('ledger_locked');
-            break;
           case '27013':
             this.emit(source, false, e.message, e.name, '27013');
             throw new Error('ledger_rejected');
