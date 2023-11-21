@@ -19,13 +19,13 @@
     "typedoc": "typedoc"
   },
   "dependencies": {
-    "@ethersproject/abstract-provider": "^5.7.0",
-    "@ledgerhq/hw-app-eth": "6.30.0",
-    "@ledgerhq/hw-transport": "^6.27.8",
-    "@ledgerhq/react-native-hw-transport-ble": "6.27.9",
-    "ethers": "^5.7.2",
-    "events": "^3.3.0",
-    "rxjs": "^7.8.0"
+    "@ethersproject/abstract-provider": "5.7.0",
+    "@ledgerhq/hw-app-eth": "6.34.9",
+    "@ledgerhq/hw-transport": "6.29.0",
+    "@ledgerhq/react-native-hw-transport-ble": "6.30.0",
+    "ethers": "5.7.2",
+    "events": "3.3.0",
+    "rxjs": "7.8.1"
   },
   "peerDependencies": {
     "@haqq/provider-base": "*",
@@ -34,20 +34,20 @@
     "react-native-ble-plx": "*"
   },
   "devDependencies": {
-    "@haqq/provider-base": "^0.0.18",
-    "@types/jest": "^29.4.0",
-    "@types/node": "^18.14.1",
-    "@types/react-native": "^0.71.3",
-    "jest": "^29.4.3",
-    "prettier": "^2.8.4",
+    "@haqq/provider-base": "0.0.18",
+    "@types/jest": "29.4.0",
+    "@types/node": "18.14.1",
+    "@types/react-native": "0.71.3",
+    "jest": "29.4.3",
+    "prettier": "2.8.4",
     "react": "18.2.0",
     "react-native": "0.71.3",
-    "react-native-ble-plx": "^2.0.3",
-    "ts-jest": "^29.0.5",
-    "tslint": "^6.1.3",
-    "tslint-config-prettier": "^1.18.0",
-    "typedoc": "^0.23.25",
-    "typedoc-plugin-markdown": "^3.14.0",
-    "typescript": "^4.9.5"
+    "react-native-ble-plx": "2.0.3",
+    "ts-jest": "29.0.5",
+    "tslint": "6.1.3",
+    "tslint-config-prettier": "1.18.0",
+    "typedoc": "0.23.25",
+    "typedoc-plugin-markdown": "3.14.0",
+    "typescript": "4.9.5"
   }
 }
