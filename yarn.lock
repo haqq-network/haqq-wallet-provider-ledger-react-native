@@ -1184,12 +1184,13 @@
   dependencies:
     "@hapi/hoek" "^9.0.0"
 
-"@haqq/provider-base@^0.0.18":
-  version "0.0.18"
-  resolved "https://registry.yarnpkg.com/@haqq/provider-base/-/provider-base-0.0.18.tgz#aa5cc0ed43ef0d19a0fe7f667cde7f7d0b365619"
-  integrity sha512-JUFMkYZkz/QIujpVUDqpM+PYf0jj2Cazty1Zb4MgTY9HWoaWBbXnD2YKLRXA6LC2HaS1EPqcppX8RAoh5C/4jg==
+"@haqq/provider-base@0.0.20":
+  version "0.0.20"
+  resolved "https://registry.yarnpkg.com/@haqq/provider-base/-/provider-base-0.0.20.tgz#34d3d6c8a564da54f60c5586da1ef2efb4bec713"
+  integrity sha512-UUbuLzZN/GH5K50NY8DDHNUaJ3u0DEVnNq/8JGmloTxlMGkYP+nHikXAKA6jXDapToNmFQEjjqtUCkHA17ri3w==
   dependencies:
     bech32-converting "^1.0.9"
+    ethers "^5.7.2"
     events "^3.3.0"
 
 "@istanbuljs/load-nyc-config@^1.0.0":

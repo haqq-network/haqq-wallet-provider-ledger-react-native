@@ -1,10 +1,12 @@
 import {TransactionRequest} from '@ethersproject/abstract-provider';
 import {
   compressPublicKey,
+  prepareHashedEip712Data,
   stringToUtf8Bytes,
   BytesLike,
   Provider,
   ProviderInterface,
+  TypedData,
 } from '@haqq/provider-base';
 import AppEth, {ledgerService} from '@ledgerhq/hw-app-eth';
 import TransportBLE from '@ledgerhq/react-native-hw-transport-ble';
@@ -148,7 +150,7 @@ export class ProviderLedgerReactNative
     return resp;
   }
 
-  async signTypedData(hdPath: string, domainHash: string, valuesHash: string) {
+  async signTypedData(hdPath: string, typedData: TypedData) {
     let resp = '';
     try {
       this.stop = false;
@@ -165,10 +167,11 @@ export class ProviderLedgerReactNative
 
       const eth = new AppEth(transport);
 
+      const {domainSeparatorHex, hashStructMessageHex} = prepareHashedEip712Data(typedData);
       const signature = await eth.signEIP712HashedMessage(
         hdPath,
-        domainHash,
-        valuesHash,
+        domainSeparatorHex,
+        hashStructMessageHex,
       );
 
       const v = (signature.v - 27).toString(16).padStart(2, '0');
