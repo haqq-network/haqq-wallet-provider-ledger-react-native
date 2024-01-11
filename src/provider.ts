@@ -167,7 +167,8 @@ export class ProviderLedgerReactNative
 
       const eth = new AppEth(transport);
 
-      const {domainSeparatorHex, hashStructMessageHex} = prepareHashedEip712Data(typedData);
+      const {domainSeparatorHex, hashStructMessageHex} =
+        prepareHashedEip712Data(typedData);
       const signature = await eth.signEIP712HashedMessage(
         hdPath,
         domainSeparatorHex,
