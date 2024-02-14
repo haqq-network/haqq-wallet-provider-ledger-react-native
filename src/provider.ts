@@ -38,7 +38,7 @@ export class ProviderLedgerReactNative
       );
     };
   };
-  
+
   async confirmAddress(hdPath: string) {
     return (await this.getAccountInfo(hdPath, true)).address;
   }
@@ -63,6 +63,7 @@ export class ProviderLedgerReactNative
               .then(result => {
                 o.next(result);
                 o.complete();
+                this.emit('getPublicKeyForHDPath', true);
               })
               .catch(e => {
                 try {
@@ -115,6 +116,7 @@ export class ProviderLedgerReactNative
               .then(result => {
                 o.next(result);
                 o.complete();
+                this.emit('signTransaction', true);
               })
               .catch(e => {
                 try {
@@ -159,6 +161,7 @@ export class ProviderLedgerReactNative
               .then(result => {
                 o.next(result);
                 o.complete();
+                this.emit('signPersonalMessage', true);
               })
               .catch(e => {
                 try {
@@ -200,6 +203,7 @@ export class ProviderLedgerReactNative
               .then(result => {
                 o.next(result);
                 o.complete();
+                this.emit('signTypedData', true);
               })
               .catch(e => {
                 try {
@@ -230,6 +234,7 @@ export class ProviderLedgerReactNative
               .then(() => {
                 o.next(true);
                 o.complete();
+                this.emit('suggestApp', true);
               })
               .catch(e => {
                 try {
@@ -237,6 +242,7 @@ export class ProviderLedgerReactNative
                 } catch (_) {
                   o.next(false);
                   o.complete();
+                  this.emit('suggestApp', false);
                 }
               });
           }),
@@ -269,6 +275,7 @@ export class ProviderLedgerReactNative
   }
 
   catchError(e: Error, source: string) {
+    this.emit('error', e, source);
     switch (e.name) {
       case 'TransportStatusError':
         // @ts-ignore
