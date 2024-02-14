@@ -11,262 +11,262 @@ import {
 import AppEth, {ledgerService} from '@ledgerhq/hw-app-eth';
 import TransportBLE from '@ledgerhq/react-native-hw-transport-ble';
 import {utils, UnsignedTransaction} from 'ethers';
+import {firstValueFrom, Observable} from 'rxjs';
 import {suggestApp} from './commands';
-import {getDeviceConnection} from './get-device-connection';
-import {sleep} from './sleep';
+import {withDevicePolling} from './device-access';
 import {ProviderLedgerReactNativeOptions} from './types';
 
 export class ProviderLedgerReactNative
   extends Provider<ProviderLedgerReactNativeOptions>
   implements ProviderInterface
 {
-  public stop: boolean = false;
-  private _transport: TransportBLE | null = null;
-
   getIdentifier(): string {
     return this._options.deviceId;
   }
 
-  async getAccountInfo(hdPath: string) {
-    let resp = {publicKey: '', address: ''};
-    try {
-      this.stop = false;
+  withDevice = () => {
+    return <T>(job: (arg0: TransportBLE) => Observable<T>): Observable<T> => {
+      return withDevicePolling(this._options.deviceId)(
+        transport =>
+          new Observable(o => {
+            this.on('abortCall', () => {
+              o.error(new Error('aborted'));
+              o.complete();
+            });
+            return job(transport).subscribe(o);
+          }),
+      );
+    };
+  };
+  
+  async confirmAddress(hdPath: string) {
+    return (await this.getAccountInfo(hdPath, true)).address;
+  }
 
-      let transport = await this.awaitForTransport(this._options.deviceId);
-      if (!transport) {
-        throw new Error('can_not_connected');
-      }
+  async getAccountInfo(hdPath: string, showDisplay = false) {
+    await this.suggestApp();
+    return firstValueFrom<{publicKey: string; address: string}>(
+      this.withDevice()(
+        transport =>
+          new Observable(o => {
+            const run = async () => {
+              const eth = new AppEth(transport);
+              const response = await eth.getAddress(hdPath, showDisplay);
 
-      if (this._options.appName) {
-        await suggestApp(transport, this._options.appName);
-        this.onDisconnectTransport();
-        transport = await this.awaitForTransport(this._options.deviceId);
-      }
+              return {
+                publicKey: compressPublicKey(response.publicKey),
+                address: response.address,
+              };
+            };
 
-      const eth = new AppEth(transport!);
-
-      const response = await eth.getAddress(hdPath);
-
-      resp = {
-        publicKey: compressPublicKey(response.publicKey),
-        address: response.address,
-      };
-      this.emit('getPublicKeyForHDPath', true);
-    } catch (e) {
-      if (e instanceof Error) {
-        this.catchError(e, 'getPublicKeyForHDPath');
-      }
-    }
-    return resp;
+            run()
+              .then(result => {
+                o.next(result);
+                o.complete();
+              })
+              .catch(e => {
+                try {
+                  o.error(e); // resolve in genericCanRetryOnError
+                } catch (_) {
+                  o.next({publicKey: '', address: ''});
+                  o.complete();
+                  this.catchError(e, 'getPublicKeyForHDPath');
+                }
+              });
+          }),
+      ),
+    );
   }
 
   async signTransaction(hdPath: string, transaction: TransactionRequest) {
-    let resp = '';
-    try {
-      this.stop = false;
-      const unsignedTx = utils
-        .serializeTransaction(transaction as UnsignedTransaction)
-        .substring(2);
-      const resolution = await ledgerService.resolveTransaction(
-        unsignedTx,
-        {},
-        {},
-      );
+    await this.suggestApp();
+    return firstValueFrom<string>(
+      this.withDevice()(
+        transport =>
+          new Observable(o => {
+            const run = async () => {
+              const eth = new AppEth(transport);
+              const unsignedTx = utils
+                .serializeTransaction(transaction as UnsignedTransaction)
+                .substring(2);
+              const resolution = await ledgerService.resolveTransaction(
+                unsignedTx,
+                {},
+                {},
+              );
+              const signature = await eth.signTransaction(
+                hdPath,
+                unsignedTx,
+                resolution,
+              );
 
-      let transport = await this.awaitForTransport(this._options.deviceId);
+              return utils.serializeTransaction(
+                transaction as UnsignedTransaction,
+                {
+                  ...signature,
+                  r: '0x' + signature.r,
+                  s: '0x' + signature.s,
+                  v: parseInt(signature.v, 10),
+                },
+              );
+            };
 
-      if (!transport) {
-        throw new Error('can_not_connected');
-      }
-
-      if (this._options.appName) {
-        await suggestApp(transport, this._options.appName);
-        this.onDisconnectTransport();
-        transport = await this.awaitForTransport(this._options.deviceId);
-      }
-
-      const eth = new AppEth(transport!);
-
-      const signature = await eth.signTransaction(
-        hdPath,
-        unsignedTx,
-        resolution,
-      );
-
-      resp = utils.serializeTransaction(transaction as UnsignedTransaction, {
-        ...signature,
-        r: '0x' + signature.r,
-        s: '0x' + signature.s,
-        v: parseInt(signature.v, 10),
-      });
-
-      this.emit('signTransaction', true);
-    } catch (e) {
-      if (e instanceof Error) {
-        this.catchError(e, 'signTransaction');
-      }
-    }
-
-    return resp;
+            run()
+              .then(result => {
+                o.next(result);
+                o.complete();
+              })
+              .catch(e => {
+                try {
+                  o.error(e); // resolve in genericCanRetryOnError
+                } catch (_) {
+                  o.next('');
+                  o.complete();
+                  this.catchError(e, 'signTransaction');
+                }
+              });
+          }),
+      ),
+    );
   }
 
   async signPersonalMessage(
     hdPath: string,
     message: string | BytesLike,
   ): Promise<string> {
-    let resp = '';
-    try {
-      this.stop = false;
-      const transport = await this.awaitForTransport(this._options.deviceId);
+    await this.suggestApp();
+    return firstValueFrom(
+      this.withDevice()(
+        transport =>
+          new Observable(o => {
+            const run = async () => {
+              const eth = new AppEth(transport);
+              const m = Array.from(
+                typeof message === 'string'
+                  ? stringToUtf8Bytes(message)
+                  : message,
+              );
+              const signature = await eth.signPersonalMessage(
+                hdPath,
+                Buffer.from(m).toString('hex'),
+              );
 
-      if (!transport) {
-        throw new Error('can_not_connected');
-      }
+              const v = (signature.v - 27).toString(16).padStart(2, '0');
+              return '0x' + signature.r + signature.s + v;
+            };
 
-      if (this._options.appName) {
-        await suggestApp(transport, this._options.appName);
-      }
-
-      const eth = new AppEth(transport);
-
-      const m = Array.from(
-        typeof message === 'string' ? stringToUtf8Bytes(message) : message,
-      );
-      const signature = await eth.signPersonalMessage(
-        hdPath,
-        Buffer.from(m).toString('hex'),
-      );
-
-      const v = (signature.v - 27).toString(16).padStart(2, '0');
-      resp = '0x' + signature.r + signature.s + v;
-
-      this.emit('signPersonalMessage', true);
-    } catch (e) {
-      if (e instanceof Error) {
-        this.catchError(e, 'signPersonalMessage');
-      }
-    }
-
-    return resp;
+            run()
+              .then(result => {
+                o.next(result);
+                o.complete();
+              })
+              .catch(e => {
+                try {
+                  o.error(e); // resolve in genericCanRetryOnError
+                } catch (_) {
+                  o.next('');
+                  o.complete();
+                  this.catchError(e, 'signPersonalMessage');
+                }
+              });
+          }),
+      ),
+    );
   }
 
   async signTypedData(hdPath: string, typedData: TypedData) {
-    let resp = '';
-    try {
-      this.stop = false;
+    await this.suggestApp();
+    return firstValueFrom<string>(
+      this.withDevice()(
+        transport =>
+          new Observable(o => {
+            const run = async () => {
+              const {domainSeparatorHex, hashStructMessageHex} =
+                prepareHashedEip712Data(typedData);
 
-      const transport = await this.awaitForTransport(this._options.deviceId);
+              const eth = new AppEth(transport);
 
-      if (!transport) {
-        throw new Error('can_not_connected');
-      }
+              const signature = await eth.signEIP712HashedMessage(
+                hdPath,
+                domainSeparatorHex,
+                hashStructMessageHex,
+              );
 
-      if (this._options.appName) {
-        await suggestApp(transport, this._options.appName);
-      }
+              const v = (signature.v - 27).toString(16).padStart(2, '0');
+              return '0x' + signature.r + signature.s + v;
+            };
 
-      const eth = new AppEth(transport);
-
-      const {domainSeparatorHex, hashStructMessageHex} =
-        prepareHashedEip712Data(typedData);
-      const signature = await eth.signEIP712HashedMessage(
-        hdPath,
-        domainSeparatorHex,
-        hashStructMessageHex,
-      );
-
-      const v = (signature.v - 27).toString(16).padStart(2, '0');
-      resp = '0x' + signature.r + signature.s + v;
-
-      this.emit('signTypedData', true);
-    } catch (e) {
-      if (e instanceof Error) {
-        this.catchError(e, 'signTypedData');
-      }
-      return '';
-    }
-
-    return resp;
+            run()
+              .then(result => {
+                o.next(result);
+                o.complete();
+              })
+              .catch(e => {
+                try {
+                  o.error(e); // resolve in genericCanRetryOnError
+                } catch (_) {
+                  o.next('');
+                  o.complete();
+                  this.catchError(e, 'signTypedData');
+                }
+              });
+          }),
+      ),
+    );
   }
 
-  abort() {
-    this.emit('abortCall');
-    this.stop = true;
-  }
+  suggestApp = async () => {
+    return firstValueFrom<boolean>(
+      this.withDevice()(
+        transport =>
+          new Observable(o => {
+            const run = async () => {
+              if (this._options.appName) {
+                await suggestApp(transport, this._options.appName);
+              }
+            };
 
-  async confirmAddress(hdPath: string) {
-    let resp = '';
-    try {
-      this.stop = false;
-
-      const transport = await this.awaitForTransport(this._options.deviceId);
-      if (!transport) {
-        throw new Error('can_not_connected');
-      }
-
-      if (this._options.appName) {
-        await suggestApp(transport, this._options.appName);
-      }
-
-      const eth = new AppEth(transport);
-
-      const response = await eth.getAddress(hdPath, true);
-
-      resp = response.address;
-      this.emit('confirmAddress', true);
-    } catch (e) {
-      if (e instanceof Error) {
-        this.emit('confirmAddress', false, e.message);
-        throw new Error(e.message);
-      }
-    }
-    return resp;
-  }
-
-  async awaitForTransport(deviceId: string, taskId?: string) {
-    let attempts = 0;
-    let canceled = false;
-    const _taskId = taskId?.trim?.()?.toLowerCase();
-    const stopTaskEventName = `stop-task-${_taskId}`;
-    const handleStopTask = () => {
-      canceled = true;
-    };
-
-    if (_taskId) {
-      this.once(stopTaskEventName, handleStopTask);
-    }
-
-    while (!this._transport && !this.stop && attempts < 115) {
-      if (canceled) {
-        throw new Error('canceled');
-      }
-
-      try {
-        const device = await getDeviceConnection(deviceId);
-
-        this._transport = await TransportBLE.open(device);
-        if (this._transport) {
-          this._transport.on('disconnect', this.onDisconnectTransport);
-        }
-      } catch (e) {
-        this.emit('awaitForTransport', new Date(), e, attempts);
-        await sleep(250);
-        attempts += 1;
-      }
-    }
-
-    if (_taskId) {
-      this.off(stopTaskEventName, handleStopTask);
-    }
-    return this._transport;
-  }
-
-  onDisconnectTransport = () => {
-    if (this._transport) {
-      this._transport.off('disconnect', this.onDisconnectTransport);
-      this._transport = null;
-    }
+            run()
+              .then(() => {
+                o.next(true);
+                o.complete();
+              })
+              .catch(e => {
+                try {
+                  o.error(e); // resolve in genericCanRetryOnError
+                } catch (_) {
+                  o.next(false);
+                  o.complete();
+                }
+              });
+          }),
+      ),
+    );
   };
+
+  async abort() {
+    this.emit('abortCall');
+    return firstValueFrom<void>(
+      this.withDevice()(
+        transport =>
+          new Observable(o => {
+            const run = async () => {
+              if (transport.isConnected) {
+                if (await transport.device.isConnected()) {
+                  transport.device.cancelConnection();
+                }
+                transport.close();
+              }
+            };
+
+            run().finally(() => {
+              o.next();
+              o.complete();
+            });
+          }),
+      ),
+    );
+  }
 
   catchError(e: Error, source: string) {
     switch (e.name) {
