@@ -1,5 +1,6 @@
 import {TransactionRequest} from '@ethersproject/abstract-provider';
 import {
+  calcTypedDataSignatureV,
   compressPublicKey,
   prepareHashedEip712Data,
   stringToUtf8Bytes,
@@ -201,7 +202,7 @@ export class ProviderLedgerReactNative
 
             run()
               .then(result => {
-                o.next(result);
+                o.next(calcTypedDataSignatureV(result));
                 o.complete();
                 this.emit('signTypedData', true);
               })
