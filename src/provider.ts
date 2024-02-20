@@ -7,6 +7,7 @@ import {
   Provider,
   ProviderInterface,
   TypedData,
+  calcTypedDataSignatureV,
 } from '@haqq/provider-base';
 import AppEth, {ledgerService} from '@ledgerhq/hw-app-eth';
 import TransportBLE from '@ledgerhq/react-native-hw-transport-ble';
@@ -201,7 +202,7 @@ export class ProviderLedgerReactNative
 
             run()
               .then(result => {
-                o.next(result);
+                o.next(calcTypedDataSignatureV(result));
                 o.complete();
                 this.emit('signTypedData', true);
               })
