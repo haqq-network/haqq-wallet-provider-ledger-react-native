@@ -276,22 +276,22 @@ export class ProviderLedgerReactNative
   }
 
   catchError(e: Error, source: string) {
-    this.emit('error', e, source);
+    let handled = false;
     switch (e.name) {
       case 'TransportStatusError':
         // @ts-ignore
         switch (String(e.statusCode)) {
           case '27010':
+            handled = true;
             this.emit(source, false, e.message, e.name, '27010');
             throw new Error('ledger_locked');
           case '27013':
+            handled = true;
             this.emit(source, false, e.message, e.name, '27013');
             throw new Error('ledger_rejected');
         }
         break;
-      default:
-        super.catchError(e, source);
-        break;
     }
+    super.catchError(e, source, handled);
   }
 }
