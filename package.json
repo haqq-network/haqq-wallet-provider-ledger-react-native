@@ -1,6 +1,6 @@
 {
   "name": "@haqq/provider-ledger-react-native",
-  "version": "0.0.28",
+  "version": "0.0.29",
   "description": "Provider for react-native ledger",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -20,9 +20,9 @@
   },
   "dependencies": {
     "@ethersproject/abstract-provider": "^5.7.0",
-    "@ledgerhq/hw-app-eth": "6.35.4",
-    "@ledgerhq/hw-transport": "6.30.3",
-    "@ledgerhq/react-native-hw-transport-ble": "6.30.0",
+    "@ledgerhq/hw-app-eth": "6.38.1",
+    "@ledgerhq/hw-transport": "6.31.3",
+    "@ledgerhq/react-native-hw-transport-ble": "6.33.3",
     "ethers": "^5.7.2",
     "events": "^3.3.0",
     "rxjs": "^7.8.0"
